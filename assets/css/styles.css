@@ -1,0 +1,65 @@
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Utility classes */
+.d-none {
+    display: none !important;
+}
+
+/* Layout styles */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+    padding: 2rem 0;
+}
+
+footer {
+    flex-shrink: 0;
+}
+
+/* Table styles */
+.table-actions {
+    min-width: 120px;
+}
+
+/* Form styles */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Button spacing */
+.btn-group-spacing > * {
+    margin-right: 0.5rem;
+}
+.btn-group-spacing > *:last-child {
+    margin-right: 0;
+} 

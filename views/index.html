@@ -1,0 +1,147 @@
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="jokes" role="tabpanel">
+        <a href="add_joke.html" class="btn btn-primary mb-3">Add New Joke</a>
+        <table class="table table-striped" id="jokesTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Joke</th>
+                    <th>Author</th>
+                    <th class="table-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="jokesTableBody">
+                <!-- Jokes will be loaded dynamically here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="edit-modal" class="modal-overlay d-none">
+    <div class="modal-content bg-white">
+        <h2 class="mb-3">Edit Joke</h2>
+        <form id="edit-form">
+            <input type="hidden" id="edit-joke-id">
+            <div class="mb-3">
+                <label for="edit-content" class="form-label">Joke Content</label>
+                <textarea id="edit-content" rows="3" class="form-control"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="edit-author" class="form-label">Author</label>
+                <input type="text" id="edit-author" class="form-control">
+            </div>
+            <div class="d-flex justify-content-end gap-2 btn-group-spacing">
+                <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-warning">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function fetchJokes() {
+        fetch('/api/jokes')
+            .then(res => res.json())
+            .then(data => {
+                const jokesTable = document.getElementById('jokesTable').getElementsByTagName('tbody')[0];
+                jokesTable.innerHTML = '';
+                data.forEach(joke => {
+                    const row = jokesTable.insertRow();
+                    row.innerHTML = `
+                        <td id="joke-${joke.id}">${joke.id}</td>
+                        <td id="joke-${joke.id}-content">${joke.content}</td>
+                        <td id="joke-${joke.id}-author">${joke.author}</td>
+                        <td class="table-actions">
+                            <button class="btn btn-warning btn-sm" id="edit-${joke.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm" id="delete-${joke.id}">Delete</button>
+                        </td>
+                    `;
+
+                    const editButton = document.getElementById(`edit-${joke.id}`);
+                    const deleteButton = document.getElementById(`delete-${joke.id}`);
+
+                    editButton.addEventListener('click', () => showJokeModal(joke));
+                    deleteButton.addEventListener('click', () => deleteJoke(joke.id));
+                });
+            })
+            .catch(err => console.error('Error fetching jokes:', err));
+    }
+
+    function showJokeModal(joke) {
+        const editModal = document.getElementById('edit-modal');
+        const editForm = document.getElementById('edit-form');
+        const editContent = document.getElementById('edit-content');
+        const editAuthor = document.getElementById('edit-author');
+        const editJokeId = document.getElementById('edit-joke-id');
+
+        editJokeId.value = joke.id;
+        editContent.value = joke.content;
+        editAuthor.value = joke.author;
+
+        editModal.classList.remove('d-none');
+
+        document.getElementById('cancel-edit').onclick = () => {
+            editModal.classList.add('d-none');
+        };
+
+        editForm.onsubmit = async (e) => {
+            e.preventDefault();
+            editJoke(joke.id, editContent, editAuthor, editModal);
+        };
+    }
+
+    function deleteJoke(id) {
+        if (confirm('Are you sure you want to delete this joke?')) {
+            const joke = {
+                id: id
+            };
+            fetch('/api/jokes', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(joke)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Joke deleted successfully!');
+                    fetchJokes();
+                } else {
+                    alert('Error deleting joke');
+                }
+            });
+        }
+    }
+
+    function editJoke(jokeId, editContent, editAuthor, editModal) {
+        const updatedContent = editContent.value;
+        const updatedAuthor = editAuthor.value;
+
+        fetch('/api/jokes', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: jokeId,
+                content: updatedContent,
+                author: updatedAuthor,
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Joke updated successfully!');
+                document.getElementById(`joke-${jokeId}-content`).textContent = updatedContent;
+                document.getElementById(`joke-${jokeId}-author`).textContent = updatedAuthor;
+                editModal.classList.add('d-none');
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(err => console.error('Error updating joke:', err));
+    }
+
+    fetchJokes();
+</script> 
