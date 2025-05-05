@@ -1,42 +1,70 @@
-# Programming Jokes API
+# 🤣 Programming Jokes API
 
-## Description
-This is a simple web application that allows users to **view, add, update, and delete programming jokes** It is built using:
-- **Node.js** (backend)
-- **MySQL** (database)
-- A provided **HTML/CSS/JS frontend** 
-
-The backend follows an API that the frontend commuicatres with using `fetch` to dynamically update the joke list.
+A simple and fun web application that allows users to **view, add, update, and delete programming jokes** through a RESTful API. Built with **Node.js**, **MySQL**, and a lightweight **HTML/CSS/JS frontend**, it demonstrates basic CRUD operations and API-driven dynamic UI updates.
 
 ---
 
-## Setup & Installation
+## 🚀 Features
 
-### **1 Prerequisites**
-- Install **[MAMP](https://www.mamp.info/en/)** (or any MySQL setup)
-- Install **Node.js** and **npm**
+- 📋 View all jokes
+- ➕ Add a new joke  
+- ✏️ Update an existing joke  
+- ❌ Delete a joke  
+- 🔁 API-driven frontend updates via `fetch`
+- ⚠️ JSON-based error handling
 
-### **2 Clone the Repository**
+---
+
+## 🛠️ Technologies Used
+
+- **Node.js** – Backend runtime
+- **Express.js** – REST API routing
+- **MySQL** – Data storage
+- **HTML/CSS/JavaScript** – Frontend interface
+- **Fetch API** – Client-server communication
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1️⃣ Prerequisites
+
+- Install [Node.js](https://nodejs.org/)
+- Install a MySQL environment (e.g., [MAMP](https://www.mamp.info/en/), XAMPP, or native MySQL)
+
+### 2️⃣ Clone the Repository
+
 ```bash
 git clone <repository-url>
-cd a3-node
+cd programming-jokes-api
+npm install
+````
 
-## Features Implemented
- View all jokes
- Add a new joke  
- Update an existing joke  
- Delete a joke
- Proper JSON error handling
- Frontend integration with API using fetch  
+### 3️⃣ Set Up the Database
 
-Here’s the APIs Used and Their URLs section for your README.md file:
+* Import the SQL file:
+  `includes/db_dump.sql`
+  into your local MySQL server.
+* Update `includes/config.js` with your own DB credentials.
 
-## API Endpoints
+### 4️⃣ Run the Server
 
-1 Fetch All Jokes
+```bash
+node server.js
+```
 
-GET /api/jokes  
-Response: 
+By default, the server runs at:
+`http://localhost:8000`
+
+---
+
+## 📡 API Endpoints
+
+### 🔹 1. Fetch All Jokes
+
+**GET** `/api/jokes`
+Returns a list of all jokes.
+
 ```json
 [
   {
@@ -44,20 +72,24 @@ Response:
     "content": "Why do programmers prefer dark mode? Because light attracts bugs!",
     "author": "John Doe",
     "created_at": "2025-03-14T08:04:51.000Z"
-  },
-  ...
+  }
 ]
+```
 
+---
 
-2 Fetch a Single Joke
+### 🔹 2. Fetch a Single Joke
 
-GET /api/jokes/:id
+**GET** `/api/jokes/:id`
 Example:
 
+```bash
 GET http://localhost:8000/api/jokes/1
+```
 
 Response:
 
+```json
 {
   "success": true,
   "joke": {
@@ -67,56 +99,81 @@ Response:
     "created_at": "2025-03-14T08:04:51.000Z"
   }
 }
+```
 
-3 Add a New Joke
+---
 
-POST /api/jokes/
-Example:
+### 🔹 3. Add a New Joke
 
-Body (JSON):
+**POST** `/api/jokes`
+Request Body:
+
+```json
 {
   "content": "New joke!",
   "author": "Alice"
 }
+```
 
 Response:
+
+```json
 {
   "success": true,
   "message": "Joke added successfully",
   "jokeID": 17
 }
+```
 
-4 Update a Joke
+---
 
-PUT /api/jokes
-Example:
+### 🔹 4. Update a Joke
 
-Body (JSON):
+**PUT** `/api/jokes`
+Request Body:
+
+```json
 {
   "id": 17,
   "content": "Updated joke text",
   "author": "Alice"
 }
+```
 
 Response:
+
+```json
 {
   "success": true,
   "message": "Joke updated successfully"
 }
+```
 
-5 Delete a Joke
+---
 
-DELETE /api/jokes
-Example:
+### 🔹 5. Delete a Joke
 
-Body(JSON):
+**DELETE** `/api/jokes`
+Request Body:
+
+```json
 {
   "id": 17
 }
+```
 
 Response:
+
+```json
 {
   "success": true,
   "message": "Joke deleted successfully"
 }
+```
 
+---
+
+## 🧠 Author
+
+**Darren Deepak**
+Originally developed as a learning project to demonstrate backend API development, MySQL integration, and frontend communication using fetch.
